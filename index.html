@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Professional Markdown to HTML Converter with real-time preview, GitHub callouts, syntax formatting, and instant HTML export.">
+    <title>MarkCraft - Real-Time Markdown to HTML Converter</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- App Header -->
+    <header class="app-header">
+        <div class="brand-section">
+            <div class="brand-icon">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <path d="M7 15V9l3 3 3-3v6"/>
+                    <path d="M17 12l2 2 2-2"/>
+                    <path d="M19 8v6"/>
+                </svg>
+            </div>
+            <div class="brand-titles">
+                <h1>Markdown to HTML Converter</h1>
+                <span class="brand-subtitle">Real-Time Studio & HTML Generator</span>
+            </div>
+            <span class="pro-badge">v2.0 PRO</span>
+        </div>
+
+        <div class="header-controls">
+            <!-- Template Selector -->
+            <div class="control-group">
+                <label for="template-select" class="control-label">Templates</label>
+                <select id="template-select" class="app-select" title="Load sample markdown template">
+                    <option value="showcase">🚀 Comprehensive Demo</option>
+                    <option value="blog">📝 Technical Blog Post</option>
+                    <option value="docs">📖 API Documentation</option>
+                </select>
+            </div>
+
+            <!-- Layout Selector -->
+            <div class="control-group desktop-only">
+                <label for="layout-select" class="control-label">Layout</label>
+                <select id="layout-select" class="app-select" title="Change layout view">
+                    <option value="3-column">3 Panels (Split)</option>
+                    <option value="2-column">2 Panels (Editor + Preview)</option>
+                    <option value="preview-only">Preview Focus</option>
+                </select>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons-group">
+                <input type="file" id="file-input" accept=".md,.markdown,.txt" style="display: none;">
+                <button id="upload-btn" class="btn btn-secondary" title="Upload Markdown file (.md)">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    <span>Import</span>
+                </button>
+
+                <div class="dropdown-wrapper">
+                    <button class="btn btn-secondary dropdown-trigger" id="download-menu-btn" title="Export document">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        <span>Export</span>
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" class="chevron-down">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </button>
+                    <div class="dropdown-menu">
+                        <button id="download-html-btn" class="dropdown-item">
+                            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="16 18 22 12 16 6"/>
+                                <polyline points="8 6 2 12 8 18"/>
+                            </svg>
+                            <span>Download Full HTML (.html)</span>
+                        </button>
+                        <button id="download-md-btn" class="dropdown-item">
+                            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                            </svg>
+                            <span>Download Markdown (.md)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <button id="clear-btn" class="btn btn-ghost" title="Clear editor content">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                    <span>Clear</span>
+                </button>
+
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" class="btn btn-theme" title="Toggle Light/Dark Theme">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <line x1="12" y1="1" x2="12" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/>
+                        <line x1="21" y1="12" x2="23" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                    <span class="theme-label">Theme</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Tab Switcher Navigation -->
+    <nav class="mobile-tabs-nav" aria-label="Panels navigation">
+        <button class="tab-btn active" data-target="editor-panel">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            <span>Markdown Input</span>
+        </button>
+        <button class="tab-btn" data-target="html-panel">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="16 18 22 12 16 6"/>
+                <polyline points="8 6 2 12 8 18"/>
+            </svg>
+            <span>Raw HTML</span>
+        </button>
+        <button class="tab-btn" data-target="preview-panel">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <span>HTML Preview</span>
+        </button>
+    </nav>
+
+    <!-- Main Workspace Container -->
+    <main id="container" class="layout-3-column">
+        
+        <!-- PANEL 1: Markdown Input -->
+        <section id="editor-panel" class="container panel-container active-tab-panel">
+            <div class="panel-header">
+                <div class="panel-title-wrap">
+                    <span class="panel-badge md-badge">MD</span>
+                    <h2>Markdown Input:</h2>
+                </div>
+                <div class="panel-actions">
+                    <button id="copy-md-btn" class="panel-btn" title="Copy Markdown text">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        <span>Copy</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Formatting Toolbar -->
+            <div class="markdown-toolbar" role="toolbar" aria-label="Markdown formatting toolbar">
+                <div class="toolbar-group">
+                    <button type="button" class="tool-btn" id="btn-h1" title="Heading 1 (#)">H1</button>
+                    <button type="button" class="tool-btn" id="btn-h2" title="Heading 2 (##)">H2</button>
+                    <button type="button" class="tool-btn" id="btn-h3" title="Heading 3 (###)">H3</button>
+                </div>
+                <div class="toolbar-separator"></div>
+                <div class="toolbar-group">
+                    <button type="button" class="tool-btn font-bold" id="btn-bold" title="Bold (Ctrl+B)">B</button>
+                    <button type="button" class="tool-btn font-italic" id="btn-italic" title="Italic (Ctrl+I)">I</button>
+                    <button type="button" class="tool-btn font-strike" id="btn-strikethrough" title="Strikethrough (~~)">S</button>
+                    <button type="button" class="tool-btn" id="btn-highlight" title="Highlight (==)">HL</button>
+                </div>
+                <div class="toolbar-separator"></div>
+                <div class="toolbar-group">
+                    <button type="button" class="tool-btn" id="btn-quote" title="Blockquote (>)">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/></svg>
+                    </button>
+                    <button type="button" class="tool-btn" id="btn-code" title="Inline Code (`)">&lt;/&gt;</button>
+                    <button type="button" class="tool-btn" id="btn-codeblock" title="Fenced Code Block (```)">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                    </button>
+                </div>
+                <div class="toolbar-separator"></div>
+                <div class="toolbar-group">
+                    <button type="button" class="tool-btn" id="btn-ul" title="Bulleted List (-)">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                    </button>
+                    <button type="button" class="tool-btn" id="btn-ol" title="Numbered List (1.)">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+                    </button>
+                    <button type="button" class="tool-btn" id="btn-task" title="Task List (- [ ])">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 11 3 3L22 4"/><rect x="2" y="5" width="8" height="14" rx="2"/></svg>
+                    </button>
+                </div>
+                <div class="toolbar-separator"></div>
+                <div class="toolbar-group">
+                    <button type="button" class="tool-btn" id="btn-link" title="Insert Link (Ctrl+K)">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                    </button>
+                    <button type="button" class="tool-btn" id="btn-image" title="Insert Image">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </button>
+                    <button type="button" class="tool-btn" id="btn-table" title="Insert Table">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+                    </button>
+                    <button type="button" class="tool-btn" id="btn-hr" title="Horizontal Rule (---)">—</button>
+                </div>
+                <div class="toolbar-separator"></div>
+                <div class="toolbar-group">
+                    <button type="button" class="tool-btn alert-btn-tip" id="btn-alert-tip" title="GitHub Tip Alert">💡 Tip</button>
+                    <button type="button" class="tool-btn alert-btn-warn" id="btn-alert-warning" title="GitHub Warning Alert">⚠️ Warn</button>
+                </div>
+            </div>
+
+            <!-- Markdown Textarea -->
+            <div class="editor-body">
+                <textarea id="markdown-input" placeholder="Type or paste your markdown here..." spellcheck="false"></textarea>
+            </div>
+
+            <!-- Editor Status Footer -->
+            <div class="panel-footer">
+                <div class="footer-stats">
+                    <span><strong id="word-count">0</strong> words</span>
+                    <span class="stat-divider">•</span>
+                    <span><strong id="char-count">0</strong> chars</span>
+                    <span class="stat-divider">•</span>
+                    <span><strong id="line-count">0</strong> lines</span>
+                    <span class="stat-divider">•</span>
+                    <span id="read-time">~1 min read</span>
+                </div>
+                <div class="footer-meta">
+                    <span id="cursor-position">Ln 1, Col 1</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANEL 2: Raw HTML Output -->
+        <section id="html-panel" class="container panel-container">
+            <div class="panel-header">
+                <div class="panel-title-wrap">
+                    <span class="panel-badge html-badge">HTML</span>
+                    <h2>Raw HTML Output:</h2>
+                </div>
+                <div class="panel-actions">
+                    <select id="format-mode-select" class="panel-select" title="Toggle output format">
+                        <option value="formatted">Formatted</option>
+                        <option value="minified">Minified</option>
+                    </select>
+                    <button id="copy-html-btn" class="panel-btn panel-btn-accent" title="Copy raw HTML snippet">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        <span>Copy Snippet</span>
+                    </button>
+                    <button id="copy-full-doc-btn" class="panel-btn" title="Copy standalone HTML page with styles">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        <span>Full Page</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Raw HTML Code Display -->
+            <div class="editor-body">
+                <div id="html-output" role="region" aria-label="Raw HTML Output"></div>
+            </div>
+
+            <!-- HTML Panel Status Footer -->
+            <div class="panel-footer">
+                <div class="footer-stats">
+                    <span><strong id="html-char-count">0</strong> bytes</span>
+                    <span class="stat-divider">•</span>
+                    <span><strong id="html-tag-count">0</strong> HTML tags</span>
+                </div>
+                <div class="footer-meta">
+                    <label class="sync-checkbox-label">
+                        <input type="checkbox" id="sync-scroll-check" checked>
+                        <span>Sync Scroll</span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANEL 3: HTML Preview -->
+        <section id="preview-panel" class="container panel-container">
+            <div class="panel-header">
+                <div class="panel-title-wrap">
+                    <span class="live-dot" title="Live rendering active"></span>
+                    <h2>HTML Preview:</h2>
+                </div>
+                <div class="panel-actions">
+                    <button id="copy-preview-btn" class="panel-btn" title="Copy rendered text">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        <span>Copy Text</span>
+                    </button>
+                    <button id="print-btn" class="panel-btn" title="Print or Export to PDF">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 6 2 18 2 18 9"/>
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                            <rect x="6" y="14" width="12" height="8"/>
+                        </svg>
+                        <span>Print</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Rendered HTML Live Preview -->
+            <div class="editor-body preview-scroll-wrapper">
+                <div id="preview" class="markdown-preview-content" role="region" aria-label="HTML Preview"></div>
+            </div>
+
+            <!-- Preview Panel Status Footer -->
+            <div class="panel-footer">
+                <div class="footer-stats">
+                    <span class="preview-status-indicator">⚡ Live Synchronized Preview</span>
+                </div>
+                <div class="footer-meta">
+                    <span class="badge-tag">GitHub Flavored</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
